@@ -42,7 +42,8 @@ Este MF sigue la arquitectura documentada en _Arquitectura Front Nave_ y _Detall
 
 ## 📂 Estructura del proyecto
 
-mf-web/
+```
+nextjs-v12/
 ├── pages/
 │ ├── \_app.tsx
 │ ├── index.tsx
@@ -61,6 +62,7 @@ mf-web/
 ├── tsconfig.json
 ├── package.json
 └── .eslintrc.json
+```
 
 ## 🧠 Comandos principales
 
