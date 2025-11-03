@@ -2,9 +2,95 @@
 
 ## Stack
 
-- NextJS 12.3.4
-- react ^17.0.2,
-- react-dom: ^17.0.2
+| Capa             | Tecnología                  | Versión         | Estado     |
+| ---------------- | --------------------------- | --------------- | ---------- |
+| **Lenguaje**     | TypeScript                  | 4.9.5           | ✅ LTS     |
+| **Framework**    | Next.js                     | 12.3.4          | ✅ LTS     |
+| **Librería UI**  | React / ReactDOM            | 17.0.2          | ✅ Estable |
+| **Bundler**      | Webpack                     | 5.88.2          | ✅ LTS     |
+| **Linter**       | ESLint + eslint-config-next | 8.57.0 / 12.3.4 | ✅         |
+| **HTTP Client**  | Axios                       | 1.3.0           | ✅         |
+| **Utilidades**   | Lodash.merge                | 4.6.2           | ✅         |
+| **Runtime Node** | Node.js                     | >= 18           | ✅ LTS     |
+
+---
+
+## ⚙️ Configuración principal
+
+- **Router:** Pages Router (sin App Router)
+- **Lenguaje:** TypeScript con JSX (`.tsx`)
+- **Renderizado:** Server Side Rendering (SSR) + Static Export
+- **Modo de build:** Webpack 5 + UMD (para compatibilidad)
+- **Compatibilidad:** SPA padre en Next.js 10 (React 16/17)
+- **Estilos:** CSS global (`/styles/globals.css`)
+- **Salida UMD:** `/build/widgets/`
+- **Punto de montaje:** `window.widgets.MySpa.default.render(props)`
+
+## 🧩 Arquitectura de Microfrontends
+
+Este MF sigue la arquitectura documentada en _Arquitectura Front Nave_ y _Detalle técnico de Arquitectura Front End_:
+
+| Elemento                | Descripción                                  |
+| ----------------------- | -------------------------------------------- |
+| **Formato de entrega:** | UMD (Universal Module Definition)            |
+| **Registro global:**    | `window.widgets.MySpa.default.render(props)` |
+| **Cargador (host):**    | `Config.loadScript(widgetUrl)`               |
+| **Comunicación:**       | `props` + `CustomEvent`                      |
+| **Despliegue:**         | Archivos estáticos en **CDN corporativo**    |
+| **Seguridad:**          | Acceso a través de **WAF corporativo**       |
+| **Runtime esperado:**   | Browser / SPA Padre (Next 10)                |
+
+## 📂 Estructura del proyecto
+
+mf-web/
+├── pages/
+│ ├── \_app.tsx
+│ ├── index.tsx
+│ └── api/health.ts
+├── src/
+│ ├── client/mount.tsx
+│ ├── components/HomeContent.tsx
+│ └── widgets/registerWidget.js
+├── public/
+│ └── favicon.ico
+├── styles/
+│ └── globals.css
+├── build/
+│ └── widgets/
+├── next.config.js
+├── tsconfig.json
+├── package.json
+└── .eslintrc.json
+
+## 🧠 Comandos principales
+
+| Comando                 | Descripción                                              |
+| ----------------------- | -------------------------------------------------------- |
+| `npm run dev`           | Ejecuta el proyecto en modo **desarrollo** (standalone). |
+| `npm run build`         | Compila el proyecto para **producción SSR**.             |
+| `npm run start`         | Levanta la versión compilada (modo producción).          |
+| `npm run build:widget`  | Genera el **bundle UMD** para despliegue en CDN.         |
+| `npm run export:widget` | Exporta los archivos a `/build/widgets`.                 |
+| `npm run clean`         | Limpia dependencias y caché.                             |
+
+## 🌐 Flujo de despliegue
+
+1. **Build de widget:**
+   ```bash
+   npm run build:widget
+   ```
+2. Subir al CDN:
+
+```bash
+https://cdn.miempresa.com/widgets/MySpa/1.0.0/
+```
+
+3. Cargar desde la SPA Padre:
+
+```bash
+Config.loadScript('https://cdn.miempresa.com/widgets/MySpa/1.0.0/index.js')
+  .then(() => window.widgets.MySpa.default.render({ user: 'Carlos', mode: 'widget' }))
+```
 
 Configuración más compatible con el ecosistema de MF en NextJS 10
 
